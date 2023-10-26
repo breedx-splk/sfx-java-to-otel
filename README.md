@@ -65,6 +65,46 @@ more bandwidth and storage.
 See [this example](https://github.com/open-telemetry/opentelemetry-java-examples/blob/main/metrics/src/main/java/io/opentelemetry/example/metrics/GaugeExample.java#L23) 
 for additional details on how to use a gauge.
 
+
+#### RatioGauge
+
+The Dropwizard `RatioGauge` is simply a convenience abstraction on top of an asynchronous double gauge.
+Users should be able to build their own callback methods that can do this division and return
+a double value to the OpenTelemetry gauge.
+
+#### CachedGauge
+
+The Dropwizard `CachedGauge` is a convenience API that helps to prevent invoking expensive or 
+time-consuming operations more frequently than desired. Users can build their own value caching 
+mechanism to accomplish the same thing.
+
+#### DerivativeGauge
+
+This is a convenience API for building gauges that delegate to another gauge and transform
+the value. It is assumed that users can build their own simple delegation implementation 
+without much fuss.
+
+#### JMXAttributeGauge
+
+Dropwizard provides gauge type that can measure the value returned from a JMX MBean.
+OpenTelemetry does not have a corresponding type, but one could be built and contributed
+to the OpenTelemetry project. Help wanted!
+
+If you are using the OpenTelemetry Java Instrumentation, you can leverage the 
+[`jmx-metrics`](https://github.com/open-telemetry/opentelemetry-java-instrumentation/tree/main/instrumentation/jmx-metrics/javaagent)
+instrumentation to do something very similar.
+
+Another alternative approach is to poll the metrics from JMX with an external utility,
+much like the [JMX Metric Gatherer](https://github.com/open-telemetry/opentelemetry-java-contrib/tree/main/jmx-metrics).
+
+### histogram
+
+
+
+### meter
+
+### timer
+
 ## Reporter
 
 tbd 
