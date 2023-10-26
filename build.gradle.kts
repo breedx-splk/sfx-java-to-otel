@@ -6,7 +6,7 @@ repositories {
     mavenCentral()
 }
 
-val otelVersion = "1.31"
+val otelVersion = "1.31.0"
 
 application {
     mainClass.set("com.splunk.Example")
