@@ -135,6 +135,17 @@ Dropwizard histogram was tracking quantiles and not wall times. If fine-grained 
 of millisecond) precision is needed, an exponential bucket histogram can be useful here. 
 Exponential bucket histograms are not yet supported in the Splunk O11y Suite.
 
+## SfUtil
+
+[SfUtil.java] is merely a utility class that provides a single static method called `cumulativeCounter()`.
+Its implementation is straightforward -- it makes a Dropwizard gauage whose generic type is bound
+to `Long`. It also takes a callback, so therefore it is async. 
+
+The migration here is straightforward -- users should use an OpenTelemetry async `LongCounter`
+with cumulative temporality.
+
+
+
 ## Reporter
 
 tbd 
