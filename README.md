@@ -99,6 +99,18 @@ much like the [JMX Metric Gatherer](https://github.com/open-telemetry/openteleme
 
 ### histogram
 
+Dropwizard histograms are uniquely interesting because they are primarily interested in generating
+summary data combined with _quantiles_ (think median, p90, p99, etc). This is pretty different
+from the OpenTelemetry histograms, which primarily classify measurements into discretized ranges.
+Similar, but not really the same. The Dropwizard histograms also provide several "reservoir" strategies
+that can be leveraged for several use cases.
+
+There is currently no drop-in replacement for Dropwizard histograms. 
+
+Users may be able to leverage the OpenTelemetry histogram without buckets in order to provide the summary data
+(min/max/count/sum). If quantiles are needed, users will need to manage their own reservoir implementation
+in order to compute these quantiles, and then represent each quantile as an individual
+gauge. 
 
 
 ### meter
