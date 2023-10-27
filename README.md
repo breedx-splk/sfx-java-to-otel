@@ -144,11 +144,35 @@ to `Long`. It also takes a callback, so therefore it is async.
 The migration here is straightforward -- users should use an OpenTelemetry async `LongCounter`
 with cumulative temporality.
 
+## SignalFxReporter
 
+The `SignalFxReporter` is an instance of a `ScheduledReporter` and provides 
+a way of periodically sending metrics to Splunk (formerly SignalFx). Users who are 
+migrating to OpenTelemetry java and/or the instrumentation agent will get this core
+functionality out of the box. Periodically measuring and sending metrics is fundamental
+to OpenTelemetry SDKs.
 
-## Reporter
+If you use `SignalFxReporter` it is one of two implementations, both of these 
+exist in the `com.signalfx.codahale.reporter` package but in different modules
+(either `signalfx-codahale` or `signalfx-yammer`). These serve to operate with either
+codehale or yammer, depending on the system being used.
 
-tbd 
+One feature of the `SignalFxReporter` is the ability to pass in a predicate 
+(either yammer `MetricPredicate` or a codahale `MetricFilter`) in order to 
+select which metrics get sent. OpenTelemetry usually encourages using 
+the otel collector to perform operations like this, but in the event that this 
+filtering is absolutely required to be performed in the JVM, there are two recommendations.
+
+If the Java SDK autoconfigure functionality is being used (preferred), then the 
+`AutoConfigurationCustomizer.addMetricExporterCustomizer()` spi may be leveraged.
+[An example of this is shown in this test](https://github.com/open-telemetry/opentelemetry-java/blob/976edfde504193f84d19936b97e2eb8d8cf060e2/sdk-extensions/autoconfigure/src/testFullConfig/java/io/opentelemetry/sdk/autoconfigure/provider/MetricCustomizer.java#L37).
+
+If autoconfigure is not being leveraged, considerably more work is required to filter metrics.
+You can construct a `MeterProvider` that is created with a `PeriodicMetricReader` that has
+been created with an exporter that wraps a delegate exporter in order to filter.
+
+If there is another feature of the `SignalFxReporter` that you are unsure how 
+to accomplish with OpenTelemetry, please open an issue in `signalfx-java`.
 
 # signalfx-yammer
 
