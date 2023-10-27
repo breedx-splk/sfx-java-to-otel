@@ -101,9 +101,9 @@ much like the [JMX Metric Gatherer](https://github.com/open-telemetry/openteleme
 
 Dropwizard histograms are uniquely interesting because they are primarily interested in generating
 summary data combined with _quantiles_ (think median, p90, p99, etc). This is pretty different
-from the OpenTelemetry histograms, which primarily classify measurements into discretized ranges.
-Similar, but not really the same. The Dropwizard histograms also provide several "reservoir" strategies
-that can be leveraged for several use cases.
+from OpenTelemetry histograms, which primarily classify measurements into discretized ranges called buckets.
+It's similar, but not really the same. The Dropwizard histograms also provide several "reservoir" strategies
+that can be leveraged for various use cases.
 
 There is currently no drop-in replacement for Dropwizard histograms. 
 
@@ -112,10 +112,28 @@ Users may be able to leverage the OpenTelemetry histogram without buckets in ord
 in order to compute these quantiles, and then represent each quantile as an individual
 gauge. 
 
-
 ### meter
 
+The Dropwizard meter tracks the rate that something happens, and tracks the rate as lifetime average (mean) 
+and also over sliding 1, 5, and 15 minute windows. This is essentially 4 metrics tracked together in one bundle.
+
+There is currently no drop-in replacement for the Dropwizard meter.
+
+For now, users are encouraged to leverage the OpenTelemetry counter metric with delta temporality.
+The number of counts between measurement times is easily converted to a rate, and a 1 minute measurement rate
+can be aggregated to 5 and 15 minute windows.
+
 ### timer
+
+The Dropwizard timer is described as a histogram that also uses a meter for rate. This is typically
+used to measure how long a certain piece of code takes to run. The examples are synchronous, and it
+is unclear whether or not `TimerContext` is thread-safe, so it is assumed that most uses are 
+for synchronous, single-threaded operations.
+
+Users are encouraged to use an OpenTelemetry histogram, but making note that the original 
+Dropwizard histogram was tracking quantiles and not wall times. If fine-grained precision (say nanosecond instead
+of millisecond) precision is needed, an exponential bucket histogram can be useful here. 
+Exponential bucket histograms are not yet supported in the Splunk O11y Suite.
 
 ## Reporter
 
