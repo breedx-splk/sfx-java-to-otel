@@ -174,6 +174,17 @@ been created with an exporter that wraps a delegate exporter in order to filter.
 If there is another feature of the `SignalFxReporter` that you are unsure how 
 to accomplish with OpenTelemetry, please open an issue in `signalfx-java`.
 
+## MetricMetadata
+
+`MetricMetadata` is an interface that is used by the `SignalFxReporter` and 
+`AggregateMetricSenderSessionWrapper` essentially to "tag" metrics with dimensions, potentially
+overloading the SignalFx chosen default dimensions. 
+
+In OpenTelemetry, attributes are a first-class component of metrics, and the APIs 
+support attributes directly. Instead of implementing the `MetricMetadata` interface
+or using `MetricMetadataImpl`, users can create their own `Attributes` instances 
+to be used directly with the OpenTelemetry APIs.
+
 # signalfx-yammer
 
 `signalfx-yammer` is built with yammer metrics core 2.0.0, from Feb. 2012. 
@@ -181,7 +192,6 @@ This is ancient in modern terms. Fortunately, this library only provides a small
 of classes. Let's look at each of them.
 
 ## SignalFxReporter
-## SfUtil
 ## MetricMetadata
 
 # signalfx-codahale
