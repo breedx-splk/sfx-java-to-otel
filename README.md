@@ -185,6 +185,15 @@ support attributes directly. Instead of implementing the `MetricMetadata` interf
 or using `MetricMetadataImpl`, users can create their own `Attributes` instances 
 to be used directly with the OpenTelemetry APIs.
 
+## BasicJvmMetrics
+
+This class sets up several codahale metrics that source telemetry from various MXBeans.
+Users who rely on this functionality can substitute their usage of this class with the `jmx-metrics` 
+[instrumentation](https://github.com/open-telemetry/opentelemetry-java-instrumentation/tree/main/instrumentation/jmx-metrics/library)
+from OpenTelemetry Java Instrumentation.
+
+A feature-parity configuration for the otel instrumentation is not provided.
+
 # signalfx-yammer
 
 `signalfx-yammer` is built with yammer metrics core 2.0.0, from Feb. 2012. 
