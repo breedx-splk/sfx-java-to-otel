@@ -11,6 +11,10 @@ This migration guide is intended to help users understand how they may
 leverage OpenTelemetry Java to replace their usages of `signalfx-codahale`
 and `signalfx-yammer` in their projects.
 
+If you encounter a specific scenario that needs clarification or if you are
+having trouble migrating to OpenTelemetry metrics from `signalfx-java`, 
+please feel free to [open an issue](https://github.com/signalfx/signalfx-java/issues/new).
+
 # At a Glance
 
 Let's start by looking at some of the core concepts and how they might map over
@@ -135,6 +139,14 @@ Dropwizard histogram was tracking quantiles and not wall times. If fine-grained 
 of millisecond) precision is needed, an exponential bucket histogram can be useful here. 
 Exponential bucket histograms are not yet supported in the Splunk O11y Suite.
 
+### IncrementalCounter
+
+`signalfx-codahale` includes an extension class from `Counter` called `IncrementalCounter`. 
+This metric serves to change the cumulative temporality of the codahale counter to 
+delta temporality.
+
+Users are encouraged to leverage the OpenTelemetry counter metric with delta temporality.
+
 ## SfUtil
 
 `SfUtil.java` is merely a utility class that provides a single static method called `cumulativeCounter()`.
@@ -194,15 +206,41 @@ from OpenTelemetry Java Instrumentation.
 
 A feature-parity configuration for the otel instrumentation is not provided.
 
-# signalfx-yammer
+## ResettingHistogram
 
-`signalfx-yammer` is built with yammer metrics core 2.0.0, from Feb. 2012. 
-This is ancient in modern terms. Fortunately, this library only provides a small number
-of classes. Let's look at each of them.
+`sigfnalfx-java` offers a custom type called `ResettingHistogram` which extends the codahale histogram.
+This behaves just like the codahale histogram, except that it uses a copy of a codehale
+reservoir class that clears itself after each snapshot.
 
-## SignalFxReporter
-## MetricMetadata
+There is no equivalent in OpenTelemetry, and users who need this functionality may consider
+building their own implementation.
 
-# signalfx-codahale
+## ResettingTimer
+
+Apparently because the codahale timer is basically a histogram, there is also a SignalFx specific
+extension class called `ResettingTimer`. Much like the `ResettingHistogram`, it uses a reservoir that
+clears itself when it is snapshotted.
+
+There is no equivalent in OpenTelemetry, and users who need this functionality may consider
+building their own implementation.
+
+## SettableLongGauge, SettableDoubleGauge
+
+These are both SignalFx specific implementation classes that provide synchronous measurements
+to the otherwise normally async codahale gauge implementations.
+
+The synchronous OpenTelemetry gauge should be a natural replacement.
+
+# Conclusion
+
+Most, but not all, codahale/yammer metrics have a replacement available with OpenTelemetry.
+In the few corner cases where a direct migration cannot be performed, it is expected that some  
+users may need to build their own bespoke functionality. Regardless, users are strongly 
+encouraged to embrace OpenTelemetry as the future of their metrics collection and reporting system.
+
+In the long term, this deprecation and removal of codahale metrics should be 
+viewed as a positive step forward. Users are assured that Splunk and a vast community 
+of users and vendors are all committed to the future of OpenTelemetry. 
 
 
+ 
