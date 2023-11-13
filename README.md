@@ -147,6 +147,22 @@ delta temporality.
 
 Users are encouraged to leverage the OpenTelemetry counter metric with delta temporality.
 
+## A Note About Temporality
+
+The OpenTelemetry specification contains a 
+[detailed description of temporality](https://github.com/open-telemetry/opentelemetry-specification/blob/d855249b210ecd832889fc4ce91a4444f82e252a/specification/metrics/data-model.md#temporality).
+In brief, there are two primary ways of reporting measured metric quantities. The first is 
+accomplished by sending the actual current absolute measured value. This is called __cumulative temporality__.
+The other approach is to report the difference between the current measured value and the current value. 
+This is called __delta temporality__.
+
+It is generally possible to convert cumulative measurements to delta temporality with only a single point 
+lookback, if delivery order is guaranteed. Going from delta to cumulative is usually more challenging 
+because it requires an absolute measurement and complete measurement replay.
+
+Codahale generally uses cumulative temporality. OpenTelemetry is slightly more flexible and allows users to choose
+temporality for each instrument type. Note: this is not the same as per-instrument temporality.
+
 ## SfUtil
 
 `SfUtil.java` is merely a utility class that provides a single static method called `cumulativeCounter()`.
