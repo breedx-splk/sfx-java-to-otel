@@ -153,7 +153,7 @@ The OpenTelemetry specification contains a
 [detailed description of temporality](https://github.com/open-telemetry/opentelemetry-specification/blob/d855249b210ecd832889fc4ce91a4444f82e252a/specification/metrics/data-model.md#temporality).
 In brief, there are two primary ways of reporting measured metric quantities. The first is 
 accomplished by sending the actual current absolute measured value. This is called __cumulative temporality__.
-The other approach is to report the difference between the current measured value and the current value. 
+The other approach is to report the difference between the current measured value and the prior value. 
 This is called __delta temporality__.
 
 It is generally possible to convert cumulative measurements to delta temporality with only a single point 
